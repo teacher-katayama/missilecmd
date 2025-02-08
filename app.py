@@ -6,13 +6,20 @@ import random
 
 import pyxel
 
+SCREEN_WIDTH = 160
+SCREEN_HEIGHT = 120
+
 
 class MissileCommand:
     def __init__(self):
         """初期設定"""
-        pyxel.init(160, 120, title="Missile Command")
-        self.bases = [(20, 110), (80, 110), (140, 110)]  # 砲台の位置 (左, 中央, 右)
-        self.aim = [80, 60]  # 照準の位置
+        pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="Missile Command")
+        self.bases = [
+            (20, SCREEN_HEIGHT - 10),
+            (SCREEN_WIDTH // 2, SCREEN_HEIGHT - 10),
+            (SCREEN_WIDTH - 20, SCREEN_HEIGHT - 10),
+        ]  # 砲台の位置 (左, 中央, 右)
+        self.aim = [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2]  # 照準の位置 (画面中央)
         self.reset()  # リセット処理
         pyxel.run(self.update, self.draw)
 
@@ -44,7 +51,7 @@ class MissileCommand:
             self.update_aim()  # 照準の処理
             self.update_shots()  # 迎撃ミサイルの処理
             self.update_explosions()  # 爆発の処理
-            if pyxel.btnp(pyxel.KEY_RETURN):
+            if pyxel.btnp(pyxel.KEY_SPACE):
                 self.opening = False
             return
 
@@ -163,11 +170,26 @@ class MissileCommand:
 
         # ゲームオーバー表示
         if self.game_over:
-            pyxel.text(60, 60, "GAME OVER", pyxel.COLOR_RED)
+            pyxel.text(
+                SCREEN_WIDTH // 2 - 20,
+                SCREEN_HEIGHT // 2 - 5,
+                "GAME OVER",
+                pyxel.COLOR_RED,
+            )
         # オープニング表示
         elif self.opening:
-            pyxel.text(60, 60, "Missile Command", pyxel.COLOR_WHITE)
-            pyxel.text(60, 70, "Press Enter", pyxel.COLOR_WHITE)
+            pyxel.text(
+                SCREEN_WIDTH // 2 - 30,
+                SCREEN_HEIGHT // 2 - 5,
+                "Missile Command",
+                pyxel.COLOR_WHITE,
+            )
+            pyxel.text(
+                SCREEN_WIDTH // 2 - 30,
+                SCREEN_HEIGHT // 2 + 5,
+                "Press Space Bar",
+                pyxel.COLOR_WHITE,
+            )
 
     def draw_aim(self) -> None:
         """照準の描画"""
