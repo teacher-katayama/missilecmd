@@ -6,8 +6,9 @@ import random
 
 import pyxel
 
-SCREEN_WIDTH = 160
-SCREEN_HEIGHT = 120
+SCREEN_WIDTH = 160  # 画面幅
+SCREEN_HEIGHT = 120  # 画面高さ
+EXPLOSION_SIZE = 9  # 爆発の大きさ
 
 
 class MissileCommand:
@@ -25,10 +26,10 @@ class MissileCommand:
 
     def reset(self) -> None:
         """リセット処理"""
-        self.missiles = []  # 敵ミサイル
-        self.explosions = []  # 爆発エフェクト
+        self.missiles = []  # 敵ミサイル[始点x, 始点y, 終点x, 進行度]
+        self.explosions = []  # 爆発エフェクト[座標x, 座標y, 大きさ]
         self.base_active = [True, True, True]  # 砲台の生存状態
-        self.shots = []  # 発射された迎撃ミサイル
+        self.shots = []  # 発射された迎撃ミサイル[始点x, 始点y, 終点x, 終点y, 進行度]
         self.score = 0  # スコア
         self.game_over = False  # ゲームオーバー判定
         self.opening = True  # オープニング表示
@@ -95,7 +96,7 @@ class MissileCommand:
             shot_y = shot[1] + (shot[3] - shot[1]) * progress
             shot.append((shot_x, shot_y))
             if progress == 1:
-                self.explosions.append([shot[2], shot[3], 9])
+                self.explosions.append([shot[2], shot[3], EXPLOSION_SIZE])
                 self.shots.remove(shot)
 
     def update_explosions(self) -> None:
@@ -127,9 +128,11 @@ class MissileCommand:
         """
         # 敵ミサイルの追加
         if random.random() < 0.02:
-            start_x = random.randint(0, 160)
-            target_x = random.choice([20, 80, 140])
-            self.missiles.append([start_x, 0, start_x, target_x, 110])
+            start_x = random.randint(0, SCREEN_WIDTH)
+            target_x = random.choice(
+                [self.bases[0][0], self.bases[1][0], self.bases[2][0]]
+            )
+            self.missiles.append([start_x, 0, start_x, target_x, SCREEN_HEIGHT - 10])
 
         # 敵ミサイルの移動
         for missile in self.missiles[:]:
