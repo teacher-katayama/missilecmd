@@ -45,6 +45,8 @@ class MissileCommand:
         """
         # ゲームオーバー
         if self.game_over:
+            if pyxel.btnp(pyxel.KEY_SPACE):
+                self.reset() # リセット処理
             return
 
         # オープニング
@@ -178,6 +180,12 @@ class MissileCommand:
                 SCREEN_HEIGHT // 2 - 5,
                 "GAME OVER",
                 pyxel.COLOR_RED,
+            )
+            pyxel.text(
+                SCREEN_WIDTH // 2 - 30,
+                SCREEN_HEIGHT // 2 + 5,
+                "Press Space Bar",
+                pyxel.COLOR_WHITE,
             )
         # オープニング表示
         elif self.opening:
